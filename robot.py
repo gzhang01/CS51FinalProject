@@ -13,6 +13,6 @@ class Robot:
   def getRadius(self) :
   	return self.r
 
-  def move(x1 y1)
+  def move(x1, y1)
     self.x = x1
     self.y = y1
