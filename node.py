@@ -1,29 +1,43 @@
 class Node:
-    def _init_(self, x, y, neighbors):
+    def __init__(self, x, y, neighbors=[]):
         self.x = x
         self.y = y
         # neighbors is a list of other points near this node that are also nodes
         self.neighbors = neighbors
         
-    def get_x(self) :
+    def getX(self) :
         return self.x
         
-    def get_y(self):
+    def getY(self):
         return self.y
         
+    def get_point(self):
+        return (self.getX(), self.getY())
+
     def get_dist(self, other):
-        return ((self.x - other.x)**2 + (self.y - other.y)**2)**0.5
+        return ((self.x - other.getX()) ** 2 + (self.y - other.getY()) ** 2) ** 0.5
         
     def get_neighbors(self):
         return self.neighbors
         
     def add_neighbor(self, other):
-        neighbors.append(other)
+        self.neighbors.append(other)
         
     def remove_neighbor(self, other):
-        neighbors.remove(other)
+        self.neighbors.remove(other)
         
-    def obstacles(self):
+    def is_obstacle(self, other):
         # returns whether there is an obstacle between two Nodes
+        return False
 
+    def __str__(self):
+        return "({0}, {1})".format(self.get_x(), self.get_y())
+
+node1 = Node(1, 1)
+node2 = Node(2, 2)
+print node1.get_dist(node2)
+print node2.get_dist(node1)
+node1.add_neighbor(node2)
+for node in node1.get_neighbors():
+    print node
 
