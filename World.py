@@ -13,10 +13,16 @@ class World:
 		self.nodes.append(new_node)
 		return new_node
 
+	# Removes a node from the world
+	def remove_node(self, node):
+		for neighbor in node.get_neighbors():
+			neighbor.remove_neighbor(node)
+		self.nodes.remove(node)
+
 	# Gets the node at a given point. Returns None if no node exists at point
 	def get_node(self, p):
 		for node in self.nodes:
-			if node.get_point() == p:
+			if node.getX() == p.getX() and node.getY() == p.getY():
 				return node
 		return None
 
@@ -28,6 +34,48 @@ class World:
 	# Gets the distance between two nodes
 	def get_dist(self, n1, n2):
 		return n1.get_dist(n2)
+
+	# Calculates the best path from start node to goal node using A* algorithm
+	def find_path(self, start, goal):
+		closedset = []
+		openset = [start]
+
+		while len(openset) != 0:
+			current = openset[0]
+			for node in openset:
+				if node.get_fscore() < current.get_fscore():
+					current = node
+			if current == goal:
+				return self.reconstruct_path(goal)
+			openset.remove(current)
+			closedset.append(current)
+			for neighbor in current.get_neighbors():
+				if neighbor in closedset: continue
+				tentative_gscore = current.get_gscore() + self.get_dist(current, neighbor)
+				if neighbor not in openset or tentative_gscore < neighbor.get_gscore():
+					neighbor.set_parent(current)
+					neighbor.set_gscore(tentative_gscore)
+					neighbor.set_fscore(neighbor.get_gscore() + self.get_dist(neighbor, goal))
+					if neighbor not in openset:
+						openset.insert(0, neighbor)
+
+		return "Could not find path!"
+
+	# Reconstructs the path taken to get to the goal node
+	def reconstruct_path(self, current):
+		total_path = [current]
+		while current.get_parent() != None:
+			current = current.get_parent()
+			total_path.insert(0, current)
+		for node in self.nodes:
+			node.set_parent(None)
+			node.set_gscore(0)
+			node.set_fscore(0)
+		return total_path
+
+	# Gets all nodes in world
+	def get_nodes(self):
+		return self.nodes
 
 	# Draws all nodes on the screen
 	# Used for testing purposes; will not draw nodes in final result

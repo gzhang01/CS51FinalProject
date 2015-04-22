@@ -1,8 +1,12 @@
 class Node:
     def __init__(self, p):
         self.point = p
-        # neighbors is a list of other points near this node that are also nodes
+        # Neighbors is a list of other points near this node that are also nodes
         self.neighbors = []
+        # The follow are used in the A* algorithm
+        self.g_score = 0
+        self.f_score = 0
+        self.parent = None
         
     def getX(self) :
         return self.point.getX()
@@ -23,8 +27,28 @@ class Node:
         self.neighbors.append(other)
         
     def remove_neighbor(self, other):
-        self.neighbors.remove(other)
+        if other in self.neighbors:
+            self.neighbors.remove(other)
+        else: print "Trying to remove non-existent neighbor!"
         
+    def get_gscore(self):
+        return self.g_score
+
+    def set_gscore(self, i):
+        self.g_score = i
+
+    def get_fscore(self):
+        return self.f_score
+
+    def set_fscore(self, i):
+        self.f_score = i
+
+    def get_parent(self):
+        return self.parent
+
+    def set_parent(self, node):
+        self.parent = node
+
     def is_obstacle(self, other):
         # returns whether there is an obstacle between two Nodes
         return False
