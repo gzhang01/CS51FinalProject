@@ -1,21 +1,20 @@
 class Node:
-    def __init__(self, x, y, neighbors=[]):
-        self.x = x
-        self.y = y
+    def __init__(self, p):
+        self.point = p
         # neighbors is a list of other points near this node that are also nodes
-        self.neighbors = neighbors
+        self.neighbors = []
         
     def getX(self) :
-        return self.x
+        return self.point.getX()
         
     def getY(self):
-        return self.y
+        return self.point.getY()
         
     def get_point(self):
-        return (self.getX(), self.getY())
+        return self.point
 
     def get_dist(self, other):
-        return ((self.x - other.getX()) ** 2 + (self.y - other.getY()) ** 2) ** 0.5
+        return ((self.getX() - other.getX()) ** 2 + (self.getY() - other.getY()) ** 2) ** 0.5
         
     def get_neighbors(self):
         return self.neighbors
@@ -31,13 +30,11 @@ class Node:
         return False
 
     def __str__(self):
-        return "({0}, {1})".format(self.get_x(), self.get_y())
+        return "({0}, {1})".format(self.getX(), self.getY())
 
-node1 = Node(1, 1)
-node2 = Node(2, 2)
-print node1.get_dist(node2)
-print node2.get_dist(node1)
-node1.add_neighbor(node2)
-for node in node1.get_neighbors():
-    print node
+    def print_neighbors(self):
+        print "["
+        for node in self.get_neighbors():
+            print node
+        print "]"
 
