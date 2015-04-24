@@ -1,11 +1,13 @@
 from Graphics import *
 from Node import Node
+from Robot import Robot
 
 class World:
 	def __init__(self):
 		self.world = GraphWin("World", 500, 500)
 		# List of nodes in world. May use other data type later
 		self.nodes = []
+		self.objects = []
 
 	# Creates a node object and adds it to the world
 	def add_node(self, p):
@@ -25,6 +27,12 @@ class World:
 			if node.getX() == p.getX() and node.getY() == p.getY():
 				return node
 		return None
+
+	# Adds a robot to the world
+	def add_robot(self, p, world, r=20):
+		new_robot = Robot(p, world, r)
+		self.objects.append(new_robot)
+		return new_robot
 
 	# Connects two nodes. i.e. sets each other as neighbors
 	def link(self, n1, n2):
@@ -59,7 +67,8 @@ class World:
 					if neighbor not in openset:
 						openset.insert(0, neighbor)
 
-		return "Could not find path!"
+		print "Could not find path!"
+		return []
 
 	# Reconstructs the path taken to get to the goal node
 	def reconstruct_path(self, current):
@@ -77,6 +86,10 @@ class World:
 	def get_nodes(self):
 		return self.nodes
 
+	# Gets the drawable world
+	def get_world(self):
+		return self.world
+
 	# Draws all nodes on the screen
 	# Used for testing purposes; will not draw nodes in final result
 	def draw_nodes(self):
@@ -90,6 +103,11 @@ class World:
 				midpt = path.get_midpoint()
 				text = Text(midpt, "{0}".format(int(round(self.get_dist(node, neighbor)))))
 				text.draw(self.world)
+
+	# Draws all objects on the screen
+	# TODO: Make robot move when the center updates
+	def draw_objects(self):
+		self.world.redraw()
 
 	# Erases everything in world
 	# Note: nodes never get erased in testing as nodes should never move!

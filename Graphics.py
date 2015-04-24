@@ -478,6 +478,21 @@ class Point(GraphicsObject):
     def getX(self): return self.x
     def getY(self): return self.y
 
+    # Gets distance between two points
+    def get_distance(self, p):
+        return ((self.getX() - p.getX())**2 + (self.getY() - p.getY())**2)**0.5
+
+    # Returns the direction from self to p scaled to ds
+    def get_direction(self, p, ds):
+        x = p.getX() - self.getX()
+        y = p.getY() - self.getY()
+        length = self.get_distance(p)
+        return Point(x / length * ds, y / length * ds)
+
+    # Determines whether two points are at the same location
+    def equals(self, p):
+        return self.getX() == p.getX() and self.getY() == p.getY()
+
 class _BBox(GraphicsObject):
     # Internal base class for objects represented by bounding box
     # (opposite corners) Line segment is a degenerate case.
@@ -501,6 +516,15 @@ class _BBox(GraphicsObject):
         p1 = self.p1
         p2 = self.p2
         return Point((p1.x+p2.x)/2.0, (p1.y+p2.y)/2.0)
+
+    # Sets the center of the object to point p
+    def setCenter(self, p):
+        center = self.getCenter()
+        dx, dy = p.getX() - center.getX(), p.getY() - center.getY()
+        new_p1 = Point(self.p1.getX()+dx, self.p1.getY()+dy)
+        new_p2 = Point(self.p2.getX()+dx, self.p2.getY()+dy)
+        self.p1 = new_p1
+        self.p2 = new_p2
     
 class Rectangle(_BBox):
     
