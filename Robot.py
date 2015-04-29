@@ -4,11 +4,11 @@ class Robot:
     def __init__(self, p, world, r):
         self.center = p
         self.r = r
+        self.world = world
         self.robot = Circle(self.center, self.r)
         self.robot.setFill("Purple")
-        world.addItem(self)
-        # Determines velocity of the robot. Can be changed
-        self.vel = 10
+        world.get_world().addItem(self)
+        self.name = "robot"
 
     def get_center(self):
         return self.center
@@ -16,20 +16,23 @@ class Robot:
     def get_radius(self) :
         return self.r
 
-    # TODO: move needs to alter the location of robot, not just center
+    # Destination must be a node!
     def move(self, destination):
-        if self.center.get_distance(destination) < self.vel:
-            self.center = destination
-        else: 
-            dsvec = self.center.get_direction(destination, self.vel)
-            self.center.move(dsvec.getX(), dsvec.getY())
+        self.center = destination.get_point()
         self.robot.setCenter(self.center)
+        self.world.draw_objects()
 
     def undraw(self):
         self.robot.undraw()
 
     def draw(self, window):
         self.robot.draw(window)
+
+    def get_location(self):
+        return self.get_center()
+
+    def get_name(self):
+        return self.name
 
     def __str__(self):
         return "Robot at ({0}, {1})".format(self.center.getX(), self.center.getY())

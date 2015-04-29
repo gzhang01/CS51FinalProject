@@ -10,8 +10,8 @@ class World:
 		self.objects = []
 
 	# Creates a node object and adds it to the world
-	def add_node(self, p):
-		new_node = Node(p)
+	def add_node(self, p, name):
+		new_node = Node(p, name)
 		self.nodes.append(new_node)
 		return new_node
 
@@ -82,6 +82,17 @@ class World:
 			node.set_fscore(0)
 		return total_path
 
+	# Navigates object to goal
+	def nav(self, obj, goal):
+		for n in self.nodes:
+			print "{0}: {1}".format(n.get_name(), n.get_location())
+		start = self.get_node(obj.get_location())
+		path = self.find_path(start, goal)
+		for node in path:
+			while not obj.get_location().equals(node):
+				print "{0}, {1}, {2}".format(obj, node, goal)
+				obj.move(node)
+
 	# Gets all nodes in world
 	def get_nodes(self):
 		return self.nodes
@@ -97,6 +108,10 @@ class World:
 			c = Circle(node.get_point(), 3)
 			c.setFill("black")
 			c.draw(self.world)
+			loc = node.get_point().clone()
+			loc.move(-10, 0)
+			name = Text(loc, node.get_name())
+			name.draw(self.world)
 			for neighbor in node.get_neighbors():
 				path = Line(node.get_point(), neighbor.get_point())
 				path.draw(self.world)

@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, p):
+    def __init__(self, p, name):
         self.point = p
         # Neighbors is a list of other points near this node that are also nodes
         self.neighbors = []
@@ -7,6 +7,7 @@ class Node:
         self.g_score = 0
         self.f_score = 0
         self.parent = None
+        self.name = name
         
     def getX(self) :
         return self.point.getX()
@@ -32,6 +33,12 @@ class Node:
             self.neighbors.remove(other)
         else: print "Trying to remove non-existent neighbor!"
         
+    def get_name(self):
+        return self.name
+
+    def get_location(self):
+        return self.get_point()
+
     def get_gscore(self):
         return self.g_score
 
@@ -53,6 +60,9 @@ class Node:
     def is_obstacle(self, other):
         # returns whether there is an obstacle between two Nodes
         return False
+
+    def equals(self, other):
+        return self.point.equals(other.point)
 
     def __str__(self):
         return "({0}, {1})".format(self.getX(), self.getY())

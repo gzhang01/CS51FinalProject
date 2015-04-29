@@ -470,6 +470,9 @@ class Point(GraphicsObject):
         self.x = self.x + dx
         self.y = self.y + dy
         
+    def __str__(self):
+        return "{0}, {1}".format(self.x, self.y)
+
     def clone(self):
         other = Point(self.x,self.y)
         other.config = self.config.copy()
