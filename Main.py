@@ -1,32 +1,44 @@
 import World
 from Graphics import *
+import random
 
 world = World.World()
 
 def initialize_nodes():
-	n1 = world.add_node(Point(50, 50), "n1")
-	n2 = world.add_node(Point(50, 225), "n2")
-	n3 = world.add_node(Point(200, 50), "n3")
-	n4 = world.add_node(Point(200, 100), "n4")
-	n5 = world.add_node(Point(300, 250), "n5")
-	n6 = world.add_node(Point(250, 400), "n6")
-	n7 = world.add_node(Point(175, 175), "n7")
-	world.link(n1, n2)
-	world.link(n1, n3)
-	world.link(n3, n4)
-	world.link(n2, n5)
-	world.link(n4, n5)
-	world.link(n2, n6)
-	world.link(n5, n6)
-	world.link(n1, n7)
-	world.link(n7, n6)
+	for i in range(25):
+		name = "n" + str(i + 1)
+		n = world.add_node(Point(random.randint(5, 495), random.randint(5, 495)), name)
+		nodes = world.get_nodes()
+		for i in range(len(nodes)):
+			if random.randint(0, (int) (n.get_dist(nodes[i]))) < 20:
+				world.link(n, nodes[i])
+
+# n1 = world.add_node(Point(50, 50), "n1")
+# n2 = world.add_node(Point(50, 225), "n2")
+# n3 = world.add_node(Point(200, 50), "n3")
+# n4 = world.add_node(Point(200, 100), "n4")
+# n5 = world.add_node(Point(300, 250), "n5")
+# n6 = world.add_node(Point(250, 400), "n6")
+# n7 = world.add_node(Point(175, 175), "n7")
+# n8 = world.add_node(Point(138, 196), "n8")
+# world.link(n1, n2)
+# world.link(n1, n3)
+# world.link(n3, n4)
+# world.link(n2, n5)
+# world.link(n4, n5)
+# world.link(n2, n6)
+# world.link(n5, n6)
+# world.link(n1, n7)
+# world.link(n7, n6)
+# world.link(n3, n8)
+# world.link(n5, n8)
 
 def find_node(string):
 	nodes = world.get_nodes()
 	for node in nodes:
 		if string == node.get_name(): 
-			return (True, node)
-	return (False, None)
+			return True, node
+	return False, None
 
 # for i in range(100, 500, 100):
 # 	for j in range(100, 500, 100):
@@ -65,20 +77,11 @@ world.draw_objects()
 while True:
 	while True:
 		usrinput = raw_input("Select a node to navigate to: ")
-		x = find_node(usrinput)
-		if x[0]:
-			goal = x[1]
+		found, node = find_node(usrinput)
+		if found:
+			goal = node
 			break
 		print "Invalid Node!"
-		# if usrinput in ["n1", "n2", "n3", "n4", "n5", "n6", "n7"]:
-		# 	if usrinput == "n1": goal = n1
-		# 	if usrinput == "n2": goal = n2
-		# 	if usrinput == "n3": goal = n3
-		# 	if usrinput == "n4": goal = n4
-		# 	if usrinput == "n5": goal = n5
-		# 	if usrinput == "n6": goal = n6
-		# 	if usrinput == "n7": goal = n7
-		# 	break
 	world.nav(robot, goal)
 
 

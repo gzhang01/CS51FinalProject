@@ -90,6 +90,8 @@ class World:
 			while not obj.get_location().equals(node):
 				print "{0}, {1}, {2}".format(obj, node, goal)
 				obj.move(node)
+				time.sleep(0.3)
+
 
 	# Gets all nodes in world
 	def get_nodes(self):
@@ -105,17 +107,17 @@ class World:
 		for node in self.nodes:
 			c = Circle(node.get_point(), 3)
 			c.setFill("black")
-			c.draw(self.world)
+			c.draw_once(self.world)
 			loc = node.get_point().clone()
 			loc.move(-10, 0)
 			name = Text(loc, node.get_name())
-			name.draw(self.world)
+			name.draw_once(self.world)
 			for neighbor in node.get_neighbors():
 				path = Line(node.get_point(), neighbor.get_point())
-				path.draw(self.world)
+				path.draw_once(self.world)
 				midpt = path.get_midpoint()
 				text = Text(midpt, "{0}".format(int(round(self.get_dist(node, neighbor)))))
-				text.draw(self.world)
+				text.draw_once(self.world)
 
 	# Draws all objects on the screen
 	# TODO: Make robot move when the center updates

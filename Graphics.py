@@ -134,6 +134,8 @@ class GraphWin(tk.Canvas):
         master.resizable(0,0)
         self.foreground = "black"
         self.items = []
+        self.draw_once = []
+        # TODO: look at how mouse interaction works
         self.mouseX = None
         self.mouseY = None
         self.bind("<Button-1>", self._onClick)
@@ -296,6 +298,12 @@ class GraphWin(tk.Canvas):
     def delItem(self, item):
         self.items.remove(item)
 
+    def add_draw_once(self, item):
+        self.draw_once.append(item)
+
+    def del_draw_once(self, item):
+        self.draw_once.remove(item)
+
     def redraw(self):
         for item in self.items[:]:
             item.undraw()
@@ -395,6 +403,14 @@ class GraphicsObject:
         if graphwin.autoflush:
             _root.update()
 
+    def draw_once(self, graphwin):
+        if self.canvas and not self.canvas.isClosed(): raise GraphicsError(OBJ_ALREADY_DRAWN)
+        if graphwin.isClosed(): raise GraphicsError("Can't draw to closed window")
+        self.canvas = graphwin
+        self.id = self._draw(graphwin, self.config)
+        graphwin.add_draw_once(self)
+        if graphwin.autoflush:
+            _root.update()
             
     def undraw(self):
 

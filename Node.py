@@ -25,7 +25,7 @@ class Node:
         return self.neighbors
         
     def add_neighbor(self, other):
-        if other not in self.neighbors:
+        if other not in self.neighbors and other != self:
             self.neighbors.append(other)
         
     def remove_neighbor(self, other):
