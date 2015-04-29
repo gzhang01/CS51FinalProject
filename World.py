@@ -84,8 +84,6 @@ class World:
 
 	# Navigates object to goal
 	def nav(self, obj, goal):
-		for n in self.nodes:
-			print "{0}: {1}".format(n.get_name(), n.get_location())
 		start = self.get_node(obj.get_location())
 		path = self.find_path(start, goal)
 		for node in path:
