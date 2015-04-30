@@ -1,6 +1,7 @@
 from Graphics import *
 from Node import Node
 from Robot import Robot
+import Helpers
 
 class World:
 	def __init__(self):
@@ -21,12 +22,29 @@ class World:
 			neighbor.remove_neighbor(node)
 		self.nodes.remove(node)
 
+	# Takes top left (p1) and bottom right (p2) points
+	def remove_nodes_inside(self, p1, p2, mult):
+		xlist = Helpers.get_multiples(p1.getX(), p2.getX(), mult)
+		ylist = Helpers.get_multiples(p1.getY(), p2.getY(), mult)
+		for x in xlist:
+			for y in ylist:
+				node = self.get_node(Point(x, y))
+				if node is not None:
+					self.remove_node(self.get_node(Point(x, y)))
+
 	# Gets the node at a given point. Returns None if no node exists at point
 	def get_node(self, p):
 		for node in self.nodes:
 			if node.getX() == p.getX() and node.getY() == p.getY():
 				return node
 		return None
+
+	def find_node_from_string(self, string):
+		nodes = self.get_nodes()
+		for node in nodes:
+			if string == node.get_name(): 
+				return True, node
+		return False, None
 
 	# Adds a robot to the world. p should be a point
 	def add_robot(self, p, world, r=20):
@@ -76,21 +94,23 @@ class World:
 		while current.get_parent() != None:
 			current = current.get_parent()
 			total_path.insert(0, current)
-		for node in self.nodes:
-			node.set_parent(None)
-			node.set_gscore(0)
-			node.set_fscore(0)
 		return total_path
 
-	# Navigates object to goal
-	def nav(self, obj, goal):
+	# Navigates obj to goal. If show == True, prints info to terminal
+	def nav(self, obj, goal, show=True):
 		start = self.get_node(obj.get_location())
 		path = self.find_path(start, goal)
 		for node in path:
 			while not obj.get_location().equals(node):
-				print "{0}, {1}, {2}".format(obj, node, goal)
+				if show:
+					print "Robot at node: {0}, Next node: {1}, Goal: {2}, Distance traveled: {3}".format(
+						self.get_node(obj.get_location()).get_name(), node.get_name(), goal.get_name(), node.get_gscore())
 				obj.move(node)
 				time.sleep(0.3)
+		for node in self.nodes:
+			node.set_parent(None)
+			node.set_gscore(0)
+			node.set_fscore(0)
 
 
 	# Gets all nodes in world
@@ -102,25 +122,21 @@ class World:
 		return self.world
 
 	# Draws all nodes on the screen
-	# Used for testing purposes; will not draw nodes in final result
-	def draw_node(self, node):
-		c = Circle(node.get_point(), 3)
-		c.setFill("black")
-		c.draw_once(self.world)
-		loc = node.get_point().clone()
-		loc.move(-10, 0)
-		name = Text(loc, node.get_name())
-		name.draw_once(self.world)
-		for neighbor in node.get_neighbors():
-			path = Line(node.get_point(), neighbor.get_point())
-			path.draw_once(self.world)
-			midpt = path.get_midpoint()
-			text = Text(midpt, "{0}".format(int(round(self.get_dist(node, neighbor)))))
-			text.draw_once(self.world)
-
-	def draw_nodes(self):
-		for node in self.nodes:
-			self.draw_node(node)
+	def draw_nodes(self, draw_dist=True):
+		for node in self.get_nodes():
+			for neighbor in node.get_neighbors():
+				road = Line(node.get_point(), neighbor.get_point())
+				road.draw_once(self.get_world())
+				if draw_dist:
+					midpt = road.get_midpoint()
+					dist = Text(midpt, "{0}".format(int(round(self.get_dist(node, neighbor)))))
+					dist.draw_once(self.get_world())
+		for node in self.get_nodes():
+			c=Circle(node.get_point(), 10)
+			c.setFill("aquamarine")
+			c.draw_once(self.get_world())
+			text = Text(node.get_point(), node.get_name())
+			text.draw_once(self.get_world())
 
 	def draw_option_2(self):
 		for node in self.nodes:
