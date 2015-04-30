@@ -155,13 +155,14 @@ if not(button.getP1().getX()<=p.getX()<=button.getP2().getX() and button.getP1()
 	obst.draw_once(world.get_world())
 
 	# remove the nodes that are inside the new obstacle 
-	remove_nodes_inside(Point(p.getX()-robot_radius, p.getY()-robot_radius), Point(p.getX()+robot_radius, p.getY()+robot_radius))
+	remove_nodes_inside(Point(obst.getP1().getX()-robot_radius, obst.getP1().getY()-robot_radius), Point(obst.getP2().getX()+robot_radius, obst.getP2().getY()+robot_radius))
 
 # if they did hit the start button...
 else:
 	pass
 	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
 
+# draw a reset button so they can start the obstacle course from scratch
 
 while True:
 	p = world.get_world().getMouse()
