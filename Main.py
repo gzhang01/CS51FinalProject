@@ -138,6 +138,29 @@ goal.set_name("goal")
 
 world.draw_option_2()
 
+# draw "start button" for user to click once they're done adding obstacles
+button = Rectangle(Point(0, 450), Point(140, 500))
+button.setFill("aquamarine")
+button.draw_once(world.get_world())
+words = Text(Point(60, 475), "Click to begin Navigation")
+words.draw_once(world.get_world())
+
+# get coordinates of where user has clicked and check if they've hit start button
+p = world.get_world().getMouse()
+if not(0<=p.getX()<=120 and 420<=p.getY()<=500):
+	obst = Rectangle(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
+	obst.setFill("black")
+	obst.draw_once(world.get_world())
+
+	# remove the nodes that are inside the new obstacle 
+	remove_nodes_inside(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
+
+# if they did hit the start button...
+else:
+	pass
+	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
+
+
 while True:
 	p = world.get_world().getMouse()
 	name = "n" + str(node_number)
