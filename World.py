@@ -122,6 +122,17 @@ class World:
 		for node in self.nodes:
 			self.draw_node(node)
 
+	def draw_option_2(self):
+		for node in self.nodes:
+			if node.get_name() == "start":
+				c = Circle(node.get_point(), 3)
+				c.setFill("green")
+				c.draw_once(self.world)
+			if node.get_name() == "goal":
+				c = Circle(node.get_point(), 3)
+				c.setFill("red")
+				c.draw_once(self.world)
+
 	# Draws all objects on the screen
 	# TODO: Make robot move when the center updates
 	def draw_objects(self):

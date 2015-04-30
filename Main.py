@@ -1,6 +1,9 @@
 import World
 from Graphics import *
 import random
+import Helpers
+
+robot_radius = 20
 
 def initialize_nodes():
 	for i in range(25):
@@ -17,6 +20,14 @@ def find_node(string):
 		if string == node.get_name(): 
 			return True, node
 	return False, None
+
+# Takes top left (p1) and bottom right (p2) points
+def remove_nodes_inside(p1, p2):
+	xlist = Helpers.get_multiples(p1.getX(), p2.getX(), 2*robot_radius)
+	ylist = Helpers.get_multiples(p1.getY(), p2.getY(), 2*robot_radius)
+	for x in xlist:
+		for y in ylist:
+			world.remove_node(world.get_node(Point(x, y)))
 
 def create_map():
 	n1= world.add_node(Point(100,50), "1")
@@ -82,35 +93,58 @@ def create_map():
 		text.draw_once(world.get_world())
 
 world = World.World()
-create_map()
+#### OPTION 1: navigation world
+# create_map()
 # initialize_nodes()
 # world.draw_nodes()
-robot = world.add_robot(world.get_nodes()[0].get_point(), world)
-world.draw_objects()
+# robot = world.add_robot(world.get_nodes()[0].get_point(), world, robot_radius)
+# world.draw_objects()
+# 
+# while True:
+# 	while True:
+# 		usrinput = raw_input("Select a node to navigate to: ")
+# 		found, node = find_node(usrinput)
+# 		if found:
+# 			goal = node
+# 			break
+# 		print "Invalid Node!"
+# 	world.nav(robot, goal)
+
+
+
+#### OPTION 2: navigating obstacles
+def link_nodes(node):
+	SW = world.get_node(Point(node.getX() - 2 * robot_radius, node.getY() + 2 * robot_radius))
+	W = world.get_node(Point(node.getX() - 2 * robot_radius, node.getY()))
+	NW = world.get_node(Point(node.getX() - 2 * robot_radius, node.getY() - 2 * robot_radius))
+	N = world.get_node(Point(node.getX(), node.getY() - 2 * robot_radius))
+	if SW is not None: world.link(SW, node)
+	if W is not None: world.link(W, node)
+	if NW is not None: world.link(NW, node)
+	if N is not None: world.link(N, node)
+
+def create_nodes():
+	for i in range(robot_radius, world.get_world().width - robot_radius, 2*robot_radius):
+		for j in range(robot_radius, world.get_world().height - robot_radius, 2*robot_radius):
+			node = world.add_node(Point(i, j), "node")
+			link_nodes(node)
+
+create_nodes()
+nodes = world.get_nodes()
+start = nodes[0]
+start.set_name("start")
+goal = nodes[len(nodes) - 1]
+goal.set_name("goal")
+
+world.draw_option_2()
 
 while True:
-	while True:
-		usrinput = raw_input("Select a node to navigate to: ")
-		found, node = find_node(usrinput)
-		if found:
-			goal = node
-			break
-		print "Invalid Node!"
-	world.nav(robot, goal)
-
-
-
-
-
-## Example of mouse interaction!
-# node_number = 1
-# while True:
-# 	p = world.get_world().getMouse()
-# 	name = "n" + str(node_number)
-# 	n = world.add_node(p, name)
-# 	node_number += 1
-# 	print "Drawing node at {0}".format(p)
-# 	world.draw_node(n)
+	p = world.get_world().getMouse()
+	name = "n" + str(node_number)
+	n = world.add_node(p, name)
+	node_number += 1
+	print "Drawing node at {0}".format(p)
+	world.draw_node(n)
 
 
 
