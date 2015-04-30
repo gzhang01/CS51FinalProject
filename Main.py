@@ -147,6 +147,13 @@ words2 = Text(Point(50, 485), "Navigation")
 words1.draw_once(world.get_world())
 words2.draw_once(world.get_world())
 
+# draw a reset button so they can start the obstacle course from scratch
+reset = Rectangle(Point(400, 0), Point(495, 50))
+reset.setFill("aquamarine")
+reset.draw_once(world.get_world())
+words = Text(Point(450, 25), "Reset")
+words.draw_once(world.get_world())
+
 # get coordinates of where user has clicked and check if they've hit start button
 p = world.get_world().getMouse()
 if not(button.getP1().getX()<=p.getX()<=button.getP2().getX() and button.getP1().getY()<=p.getY()<=button.getP2().getY()):
@@ -162,12 +169,7 @@ else:
 	pass
 	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
 
-# draw a reset button so they can start the obstacle course from scratch
-reset = Rectangle(Point(400, 0), Point(495, 50))
-reset.setFill("aquamarine")
-reset.draw_once(world.get_world())
-words = Text(Point(450, 25), "Reset")
-words.draw_once(world.get_world())
+
 
 
 
