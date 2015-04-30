@@ -27,7 +27,9 @@ def remove_nodes_inside(p1, p2):
 	ylist = Helpers.get_multiples(p1.getY(), p2.getY(), 2*robot_radius)
 	for x in xlist:
 		for y in ylist:
-			world.remove_node(world.get_node(Point(x, y)))
+			node = world.get_node(Point(x, y))
+			if node is not None:
+				world.remove_node(world.get_node(Point(x, y)))
 
 def create_map():
 	n1= world.add_node(Point(100,50), "1")
@@ -124,8 +126,8 @@ def link_nodes(node):
 	if N is not None: world.link(N, node)
 
 def create_nodes():
-	for i in range(robot_radius, world.get_world().width - robot_radius, 2*robot_radius):
-		for j in range(robot_radius, world.get_world().height - robot_radius, 2*robot_radius):
+	for i in range(2*robot_radius, world.get_world().width - robot_radius, 2*robot_radius):
+		for j in range(2*robot_radius, world.get_world().height - robot_radius, 2*robot_radius):
 			node = world.add_node(Point(i, j), "node")
 			link_nodes(node)
 
@@ -138,6 +140,9 @@ goal.set_name("goal")
 
 world.draw_option_2()
 
+robot = world.add_robot(start.get_point(), world, robot_radius)
+world.draw_objects()
+
 # draw "start button" for user to click once they're done adding obstacles
 button = Rectangle(Point(0, 450), Point(140, 500))
 button.setFill("aquamarine")
@@ -146,28 +151,21 @@ words = Text(Point(60, 475), "Click to begin Navigation")
 words.draw_once(world.get_world())
 
 # get coordinates of where user has clicked and check if they've hit start button
-p = world.get_world().getMouse()
-if not(0<=p.getX()<=120 and 420<=p.getY()<=500):
-	obst = Rectangle(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
-	obst.setFill("black")
-	obst.draw_once(world.get_world())
+while True:
+	p = world.get_world().getMouse()
+	if not(0<=p.getX()<=140 and 450<=p.getY()<=500):
+		obst = Rectangle(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
+		obst.setFill("black")
+		obst.draw_once(world.get_world())
+		# remove the nodes that are inside the new obstacle 
+		remove_nodes_inside(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
 
-	# remove the nodes that are inside the new obstacle 
-	remove_nodes_inside(Point(p.getX()-20, p.getY()-20), Point(p.getX()+20, p.getY()+20))
-
-# if they did hit the start button...
-else:
-	pass
+	# if they did hit the start button...
+	else:
+		world.nav(robot, goal)
 	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
 
 
-while True:
-	p = world.get_world().getMouse()
-	name = "n" + str(node_number)
-	n = world.add_node(p, name)
-	node_number += 1
-	print "Drawing node at {0}".format(p)
-	world.draw_node(n)
 
 
 
