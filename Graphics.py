@@ -314,7 +314,6 @@ class GraphWin(tk.Canvas):
         for item in self.items[:]:
             item.undraw()
         self.update()
-        
                       
 class Transform:
 
