@@ -27,7 +27,9 @@ def remove_nodes_inside(p1, p2):
 	ylist = Helpers.get_multiples(p1.getY(), p2.getY(), 2*robot_radius)
 	for x in xlist:
 		for y in ylist:
-			world.remove_node(world.get_node(Point(x, y)))
+			node = world.get_node(Point(x, y))
+			if node is not None:
+				world.remove_node(world.get_node(Point(x, y)))
 
 def create_map():
 	n1= world.add_node(Point(100,50), "1")
@@ -124,8 +126,8 @@ def link_nodes(node):
 	if N is not None: world.link(N, node)
 
 def create_nodes():
-	for i in range(robot_radius, world.get_world().width - robot_radius, 2*robot_radius):
-		for j in range(robot_radius, world.get_world().height - robot_radius, 2*robot_radius):
+	for i in range(2*robot_radius, world.get_world().width - robot_radius, 2*robot_radius):
+		for j in range(2*robot_radius, world.get_world().height - robot_radius, 2*robot_radius):
 			node = world.add_node(Point(i, j), "node")
 			link_nodes(node)
 
@@ -137,6 +139,9 @@ goal = nodes[len(nodes) - 1]
 goal.set_name("goal")
 
 world.draw_option_2()
+
+robot = world.add_robot(start.get_point(), world, robot_radius)
+world.draw_objects()
 
 # draw "start button" for user to click once they're done adding obstacles
 button = Rectangle(Point(5, 450), Point(100, 500))
@@ -155,31 +160,24 @@ words = Text(Point(450, 25), "Reset")
 words.draw_once(world.get_world())
 
 # get coordinates of where user has clicked and check if they've hit start button
-p = world.get_world().getMouse()
-if not(button.getP1().getX()<=p.getX()<=button.getP2().getX() and button.getP1().getY()<=p.getY()<=button.getP2().getY()):
-	obst = Rectangle(Point(p.getX()-robot_radius, p.getY()-robot_radius), Point(p.getX()+robot_radius, p.getY()+robot_radius20))
-	obst.setFill("black")
-	obst.draw_once(world.get_world())
-
-	# remove the nodes that are inside the new obstacle 
-	remove_nodes_inside(Point(obst.getP1().getX()-robot_radius, obst.getP1().getY()-robot_radius), Point(obst.getP2().getX()+robot_radius, obst.getP2().getY()+robot_radius))
-
-# if they did hit the start button...
-else:
-	pass
-	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
-
-
-
-
-
 while True:
 	p = world.get_world().getMouse()
-	name = "n" + str(node_number)
-	n = world.add_node(p, name)
-	node_number += 1
-	print "Drawing node at {0}".format(p)
-	world.draw_node(n)
+	if not(button.getP1().getX()<=p.getX()<=button.getP2().getX() and button.getP1().getY()<=p.getY()<=button.getP2().getY()):
+		obst = Rectangle(Point(p.getX()-robot_radius, p.getY()-robot_radius), Point(p.getX()+robot_radius, p.getY()+robot_radius))
+		obst.setFill("black")
+		obst.draw_once(world.get_world())
+		# remove the nodes that are inside the new obstacle 
+		remove_nodes_inside(Point(obst.getP1().getX()-robot_radius, obst.getP1().getY()-robot_radius), Point(obst.getP2().getX()+robot_radius, obst.getP2().getY()+robot_radius))
+
+	# if they did hit the start button...
+	else:
+		world.nav(robot, goal)
+
+
+
+
+
+
 
 
 

@@ -28,7 +28,7 @@ class World:
 				return node
 		return None
 
-	# Adds a robot to the world
+	# Adds a robot to the world. p should be a point
 	def add_robot(self, p, world, r=20):
 		new_robot = Robot(p, world, r)
 		self.objects.append(new_robot)
