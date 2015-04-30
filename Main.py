@@ -95,6 +95,10 @@ def create_map():
 		text.draw_once(world.get_world())
 
 world = World.World()
+
+print "Would you like to: "
+print "1. Navigate a robot along roads"
+
 #### OPTION 1: navigation world
 # create_map()
 # initialize_nodes()
