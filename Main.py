@@ -163,6 +163,13 @@ else:
 	# TODO: INSERT SOMETHING THAT MAKES CLICKS STOP WORKING	
 
 # draw a reset button so they can start the obstacle course from scratch
+reset = Rectangle(Point(400, 0), Point(495, 50))
+reset.setFill("aquamarine")
+reset.draw_once(world.get_world())
+words = Text(Point(450, 25), "Reset")
+words.draw_once(world.get_world())
+
+
 
 while True:
 	p = world.get_world().getMouse()
