@@ -20,12 +20,3 @@ elif choice == "2":
 elif choice == "3":
 	option_3(world, robot_radius)
 else: print "Invalid selection!"
-
-
-
-
-
-
-
-
-
